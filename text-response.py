@@ -1,5 +1,6 @@
 
-
+from speech import*
+import speech_recognition as sr
 from openai import OpenAI
 
 
@@ -22,28 +23,26 @@ def example_chat(model_name: str, stream: bool = True):
 
     )
 
+    messages = []
+    while True:
+        user_input = voice_to_text()
+        if user_input == '':
+            break
+        messages.append({"role": "user", "content":user_input})
+        response = client.chat.completions.create(
 
-    response = client.chat.completions.create(
+            model=model_name,
 
-        model=model_name,
+            messages = messages,
 
-        messages = [
+            stream=stream
 
-            {
+        )
+        messages.append({"role":"assistant", "content":response.choices[0].message.content})
+        print(response.choices[0].message.content)
 
-                "role": "user",
 
-                "content": "hows it going "
-
-            }
-
-        ],
-
-        stream=stream
-
-    )
-
-    print(response.choices[0].message.content)
+        
     # for chunk in response:
     #     for choice in chunk.choices:
     #         print(choice)
