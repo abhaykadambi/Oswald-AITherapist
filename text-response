@@ -1,0 +1,54 @@
+
+
+from openai import OpenAI
+
+
+PROXY_ENDPOINT = "https://nova-litellm-proxy.onrender.com/"
+TEAM_API_KEY = "sk-na910fed2Ths7GhP9U7yjQ"
+
+def example_chat(model_name: str, stream: bool = True):
+
+    """
+
+    Examples of chat completions from the proxy
+
+    """
+
+    client = OpenAI(
+
+        api_key=TEAM_API_KEY, # set this!!!
+
+        base_url=PROXY_ENDPOINT # and this!!!
+
+    )
+
+
+    response = client.chat.completions.create(
+
+        model=model_name,
+
+        messages = [
+
+            {
+
+                "role": "user",
+
+                "content": "hows it going "
+
+            }
+
+        ],
+
+        stream=stream
+
+    )
+
+    print(response.choices[0].message.content)
+    # for chunk in response:
+    #     for choice in chunk.choices:
+    #         print(choice)
+        # print(chunk.message.content)
+
+if __name__ == "__main__":
+
+    example_chat("openai/gpt-4o", stream=False)
